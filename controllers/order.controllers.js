@@ -1,18 +1,16 @@
 import OrderService from "../services/order.services.js";
+import orderSchema from "../schemas/order.schemas.js";
+import Joi from "@hapi/joi";
 
 async function createOrder(req, res, next) {
   try {
-    let order = req.body;
+    const { error, value } = orderSchema.createOrder.validate(req.body);
 
-    let requiredFields = ["cliente", "produto", "valor"];
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
+    }
 
-    requiredFields.forEach((field) => {
-      if (!order[field] || order[field] === null) {
-        throw new Error(`O campo ${field} é obrigatório.`);
-      }
-    });
-
-    order = await OrderService.createOrder(order);
+    const order = await OrderService.createOrder(value);
 
     res.send(order);
 
@@ -35,25 +33,20 @@ async function getOrders(req, res, next) {
 
 async function updateOrder(req, res, next) {
   try {
-    let order = req.body;
-    let requiredFields = ["id", "cliente", "produto", "valor", "entregue"];
+    const { error, value } = orderSchema.updateOrder.validate(req.body);
 
-    requiredFields.forEach((field) => {
-      if (order[field] === null) {
-        throw new Error(`O campo ${field} é obrigatório.`);
-      }
-    });
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
+    }
 
-    const updatedOrder = await OrderService.updateOrder(order);
+    const updatedOrder = await OrderService.updateOrder(value);
 
     if (updatedOrder === 1) {
-      throw new Error("Número do pedido não encontrado");
+      throw new Error("Order id not found");
     }
 
     if (updatedOrder === 2) {
-      throw new Error(
-        "O nome do cliente fornecido não corresponde ao nome do cliente no pedido alvo."
-      );
+      throw new Error("The customer name must match");
     }
 
     res.send(JSON.stringify(updatedOrder));
@@ -66,30 +59,23 @@ async function updateOrder(req, res, next) {
 
 async function updateStatus(req, res, next) {
   try {
-    let order = req.body;
-    let requiredFields = ["id", "entregue"];
+    const { error, value } = orderSchema.updateStatus.validate(req.body);
 
-    requiredFields.forEach((field) => {
-      if (order[field] === null) {
-        throw new Error(`O campo ${field} é obrigatório.`);
-      }
-    });
-
-    if (typeof order.entregue !== "boolean") {
-      throw new Error(
-        "O campo entregue precisa ser atualizado com um valor 'true' ou 'false'."
-      );
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
     }
 
-    const updatedStatus = await OrderService.updateStatus(order);
+    const updatedStatus = await OrderService.updateStatus(value);
 
-    if (!updatedStatus === 1) {
-      throw new Error("Número do pedido não encontrado");
+    if (updatedStatus === 1) {
+      throw new Error("Order id not found");
     }
 
     res.send(JSON.stringify(updatedStatus));
 
-    logger.info(`Put /orders - ${JSON.stringify(updatedStatus)}`);
+    logger.info(
+      `Patch /orders/updateStatus - ${JSON.stringify(updatedStatus)}`
+    );
   } catch (err) {
     next(err);
   }
@@ -97,17 +83,21 @@ async function updateStatus(req, res, next) {
 
 async function deleteOrder(req, res, next) {
   try {
-    let id = parseInt(req.params.id);
+    const { error, value } = Joi.object({
+      id: Joi.number().integer().required(),
+    }).validate({
+      id: parseInt(req.params.id),
+    });
 
-    if (id === null) {
-      throw new Error(`O campo ${id} é obrigatório.`);
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
     }
 
-    const order = await OrderService.deleteOrder(id);
+    const data = await OrderService.deleteOrder(value.id);
 
-    res.send(JSON.stringify(order));
+    res.send(JSON.stringify(data));
 
-    logger.info(`Delete /orders - ${JSON.stringify(order)}`);
+    logger.info(`Delete /orders/:id  - ${JSON.stringify(data)}`);
   } catch (err) {
     next(err);
   }
@@ -115,12 +105,15 @@ async function deleteOrder(req, res, next) {
 
 async function getOrder(req, res, next) {
   try {
-    let id = parseInt(req.params.id);
+    const { error, value } = orderSchema.getOrder.id.validate(
+      parseInt(req.params.id)
+    );
 
-    if (id === null) {
-      throw new Error(`O campo ${id} é obrigatório.`);
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
     }
-    const order = await OrderService.getOrder(id);
+
+    const order = await OrderService.getOrder(value);
     res.send(JSON.stringify(order));
 
     logger.info(`Get /orders/:id - ${JSON.stringify(order)}`);
@@ -129,19 +122,23 @@ async function getOrder(req, res, next) {
   }
 }
 
-async function getClientTotalValue(req, res, next) {
+async function getCustomerTotalValue(req, res, next) {
   try {
-    let body = req.body;
+    const { error, value } = orderSchema.getCustomerTotalValue.validate(
+      req.body
+    );
 
-    if (!body.cliente || body.cliente === null) {
-      throw new Error(`O campo ${body.cliente} é obrigatório.`);
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
     }
 
-    const totalValue = await OrderService.getClientTotalValue(body.cliente);
+    const totalValue = await OrderService.getCustomerTotalValue(value.cliente);
 
     res.send(JSON.stringify(totalValue));
 
-    logger.info(`Post /orders/totalValue - ${JSON.stringify(totalValue)}`);
+    logger.info(
+      `Post /orders/customerTotalValue - ${JSON.stringify(totalValue)}`
+    );
   } catch (err) {
     next(err);
   }
@@ -149,17 +146,21 @@ async function getClientTotalValue(req, res, next) {
 
 async function getProductTotalValue(req, res, next) {
   try {
-    let body = req.body;
+    const { error, value } = orderSchema.getProductTotalValue.validate(
+      req.body
+    );
 
-    if (!body.produto || body.produto === null) {
-      throw new Error(`O campo ${body.produto} é obrigatório.`);
+    if (error) {
+      throw new Error("Invalid input data: " + error.details[0].message);
     }
 
-    const totalValue = await OrderService.getProductTotalValue(body.produto);
+    const totalValue = await OrderService.getProductTotalValue(value.produto);
 
     res.send(JSON.stringify(totalValue));
 
-    logger.info(`Post /orders/totalValue - ${JSON.stringify(totalValue)}`);
+    logger.info(
+      `Post /orders/productTotalValue - ${JSON.stringify(totalValue)}`
+    );
   } catch (err) {
     next(err);
   }
@@ -170,7 +171,7 @@ async function getMostWanted(req, res, next) {
     const orders = await OrderService.getMostWanted();
     res.send(JSON.stringify(orders));
 
-    logger.info(`Get /orders/getMostWanted - ${JSON.stringify(orders)}`);
+    logger.info(`Get /orders/mostWanted - ${JSON.stringify(orders)}`);
   } catch (err) {
     next(err);
   }
@@ -183,7 +184,7 @@ export default {
   updateOrder,
   updateStatus,
   deleteOrder,
-  getClientTotalValue,
+  getCustomerTotalValue,
   getProductTotalValue,
   getMostWanted,
 };

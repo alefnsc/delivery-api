@@ -1,12 +1,12 @@
 import express from "express";
 import OrderRouter from "./routes/order.routes.js";
 import winston from "winston";
+import swaggerUI from "swagger-ui-express";
+import { swaggerDocument } from "./doc/doc.js";
+import cors from "cors";
 
 global.filePath = "./json/pedidos.json";
-const app = express();
-app.use(express.json());
-
-// Configure o Winston conforme seu código
+const port = 3030;
 const { createLogger, format, transports } = winston;
 const { combine, timestamp, label, printf, errors } = format;
 
@@ -28,12 +28,16 @@ global.logger = createLogger({
   ),
   transports: [
     new transports.Console(),
-    new transports.File({ filename: "delivery-api.log" }),
+    new transports.File({ filename: "./logs/delivery-api.log" }),
   ],
 });
 
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use("/doc", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use("/orders", OrderRouter);
-app.listen(3000, async () => {
+app.listen(port, async () => {
   try {
     logger.info("API Started!");
   } catch (err) {

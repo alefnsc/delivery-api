@@ -12,14 +12,20 @@ async function getOrder(id) {
   return await OrderRepository.getOrder(id);
 }
 
-async function getClientTotalValue(cliente) {
-  const clientData = await OrderRepository.getClientTotalValue(cliente);
+async function getCustomerTotalValue(cliente) {
+  const orders = await getOrders();
+  const clientData = orders.pedidos.filter(
+    (data) => data.cliente === cliente && data.entregue === true
+  );
   const total = clientData.reduce((acc, item) => acc + item.valor, 0);
   return total;
 }
 
 async function getProductTotalValue(produto) {
-  const productData = await OrderRepository.getProductTotalValue(produto);
+  const orders = await getOrders();
+  const productData = orders.pedidos.filter(
+    (data) => data.produto === produto && data.entregue === true
+  );
   const total = productData.reduce((acc, item) => acc + item.valor, 0);
   return total;
 }
@@ -27,7 +33,10 @@ async function getProductTotalValue(produto) {
 async function getMostWanted() {
   const productsCountMap = new Map();
 
-  const deliveredOrders = await OrderRepository.getMostWanted();
+  const orders = await OrderRepository.getOrders();
+  const deliveredOrders = orders.pedidos.filter(
+    (data) => data.entregue === true
+  );
   deliveredOrders.forEach((order) => {
     const product = order.produto;
 
@@ -54,7 +63,11 @@ async function updateStatus(order) {
 }
 
 async function deleteOrder(id) {
-  return OrderRepository.deleteOrder(id);
+  const data = await getOrders();
+  const filteredOrders = data.pedidos.filter((pedido) => pedido.id !== id);
+  data.pedidos = filteredOrders;
+  await OrderRepository.putOrders(data);
+  return data;
 }
 
 export default {
@@ -64,7 +77,7 @@ export default {
   updateOrder,
   updateStatus,
   deleteOrder,
-  getClientTotalValue,
+  getCustomerTotalValue,
   getProductTotalValue,
   getMostWanted,
 };

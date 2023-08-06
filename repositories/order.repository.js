@@ -68,38 +68,9 @@ async function updateStatus(order) {
   return orderToUpdate;
 }
 
-async function deleteOrder(id) {
-  const data = await getOrders();
-  data.pedidos = data.pedidos.filter((pedido) => pedido.id !== id);
-  putOrders(data);
-  return data;
-}
-
 async function getOrder(id) {
   const data = await getOrders();
   return findOrder(id, data);
-}
-
-async function getClientTotalValue(cliente) {
-  const data = await getOrders();
-  const clientData = data.pedidos.filter(
-    (data) => data.cliente === cliente && data.entregue === true
-  );
-  return clientData;
-}
-
-async function getProductTotalValue(produto) {
-  const data = await getOrders();
-  const productData = data.pedidos.filter(
-    (data) => data.produto === produto && data.entregue === true
-  );
-  return productData;
-}
-
-async function getMostWanted() {
-  const data = await getOrders();
-  const deliveredOrders = data.pedidos.filter((data) => data.entregue === true);
-  return deliveredOrders;
 }
 
 export default {
@@ -109,8 +80,4 @@ export default {
   updateOrder,
   putOrders,
   updateStatus,
-  deleteOrder,
-  getClientTotalValue,
-  getProductTotalValue,
-  getMostWanted,
 };

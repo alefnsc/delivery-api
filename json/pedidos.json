@@ -1,22 +1,6 @@
 {
-  "nextId": 502,
+  "nextId": 506,
   "pedidos": [
-    {
-      "id": 1,
-      "cliente": "Lavínia Dâmaso",
-      "produto": "Pizza Muçarela",
-      "valor": 26,
-      "entregue": true,
-      "timestamp": "2021-05-02T19:48:09.765Z"
-    },
-    {
-      "id": 2,
-      "cliente": "Tália Simas",
-      "produto": "Pizza Napolitana",
-      "valor": 28,
-      "entregue": true,
-      "timestamp": "2021-05-02T19:48:09.765Z"
-    },
     {
       "id": 3,
       "cliente": "Tália Simas",
@@ -30,14 +14,6 @@
       "cliente": "Bento Torcato",
       "produto": "Pizza Muçarela",
       "valor": 26,
-      "entregue": true,
-      "timestamp": "2021-05-02T19:48:09.765Z"
-    },
-    {
-      "id": 5,
-      "cliente": "Quirina Teves",
-      "produto": "Pizza Pepperoni",
-      "valor": 32.5,
       "entregue": true,
       "timestamp": "2021-05-02T19:48:09.765Z"
     },
@@ -3993,6 +3969,30 @@
       "valor": 32.5,
       "entregue": true,
       "timestap": "2023-08-01T22:05:47.901Z"
+    },
+    {
+      "id": 502,
+      "cliente": "string",
+      "produto": "string",
+      "valor": 10,
+      "entregue": false,
+      "timestap": "2023-08-04T00:39:03.579Z"
+    },
+    {
+      "id": 504,
+      "cliente": "teste",
+      "produto": "teste",
+      "valor": 0,
+      "entregue": false,
+      "timestap": "2023-08-06T13:54:53.368Z"
+    },
+    {
+      "id": 505,
+      "cliente": "teste",
+      "produto": "teste",
+      "valor": 0,
+      "entregue": false,
+      "timestap": "2023-08-06T13:55:07.747Z"
     }
   ]
 }
