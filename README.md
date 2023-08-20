@@ -59,8 +59,8 @@ Additionally, you can access the Swagger UI documentation at http://localhost:30
 ## 5. Business Rules
 The Delivery API enforces the following business rules:
 
-An order must have a unique ID.
-Orders must have valid and complete information.
+- An order must have a unique ID.
+- Orders must have valid and complete information.
 
 ## 6. Methods
 The project contains methods for managing orders. Here is an overview of the methods:
