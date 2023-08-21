@@ -90,7 +90,7 @@ The Delivery API project utilizes the following libraries:
 - **winston:** A versatile logging library for Node.js.
 
 ## 8. License
-The Delivery API project was created with learning purposes about the construction of an api using node, express and other libraries, feel free to clone and to know its capabilities
+The Delivery API project was created for learning purposes about the construction of an api using node, express and other libraries under GNU General Public License
 
 ## 9. Contact
 **Maintainer:** Alexandre Fonseca
