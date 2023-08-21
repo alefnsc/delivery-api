@@ -11,8 +11,7 @@ Date: August 20, 2023
 5. [Business Rules](#5-business-rules)
 6. [Methods](#6-methods)
 7. [Libraries Used](#7-libraries-used)
-8. [License](#8-license)
-9. [Contact](#9-contact)
+8. [Contact](#8-contact)
 
 ---
 
@@ -89,9 +88,6 @@ The Delivery API project utilizes the following libraries:
 - **swagger-ui-express:** Middleware for serving Swagger UI documentation.
 - **winston:** A versatile logging library for Node.js.
 
-## 8. License
-The Delivery API project was created for learning purposes about the construction of an api using node, express and other libraries under GNU General Public License
-
 ## 9. Contact
-**Maintainer:** Alexandre Fonseca
-**Email:** alexandrefonsecach@gmail.com
+- **Maintainer:** Alexandre Fonseca
+- **Email:** alexandrefonsecach@gmail.com
