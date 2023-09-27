@@ -1,7 +1,3 @@
-
-Version: 1.0
-Date: August 20, 2023
-
 ## Table of Contents
 
 1. [Introduction](#1-introduction)
